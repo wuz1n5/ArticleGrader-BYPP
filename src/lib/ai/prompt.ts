@@ -1,5 +1,10 @@
 import type OpenAI from "openai";
 
+// Bump this whenever SYSTEM_PROMPT's difficulty-judging logic changes.
+// completeArticle() stamps it on every analysis, so it's how a reanalysis
+// pass distinguishes rows judged under an older prompt from current ones.
+export const PROMPT_VERSION = 2;
+
 const SYSTEM_PROMPT = `You are analyzing a science news article for ArticleGrade, a site that helps readers build the background knowledge needed to understand real science articles.
 
 You are given only the article's title, one-paragraph summary, and category. Do not invent specific facts, experimental results, numbers, or claims that are not implied by this input. Where the input doesn't give you enough to be certain, be conservative rather than speculative.

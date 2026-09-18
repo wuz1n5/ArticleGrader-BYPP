@@ -1,4 +1,5 @@
 import { getSql } from "./client";
+import { PROMPT_VERSION } from "@/lib/ai/prompt";
 import type { ArticleAnalysis, LearningStep } from "@/types/analysis";
 
 interface AnalysisRow {
@@ -75,6 +76,7 @@ export async function completeArticle(
         difficulty = ${result.difficulty},
         difficulty_reason = ${result.difficultyReason},
         learning_path = ${JSON.stringify(result.learningPath)}::jsonb,
+        prompt_version = ${PROMPT_VERSION},
         analyzed_at = now()
     WHERE article_id = ${articleId}
   `;
