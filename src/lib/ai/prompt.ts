@@ -1,9 +1,10 @@
 import type OpenAI from "openai";
 
-// Bump this whenever SYSTEM_PROMPT's difficulty-judging logic changes.
-// completeArticle() stamps it on every analysis, so it's how a reanalysis
-// pass distinguishes rows judged under an older prompt from current ones.
-export const PROMPT_VERSION = 2;
+// Bump this whenever SYSTEM_PROMPT's difficulty-judging or learning-path
+// logic changes. completeArticle() stamps it on every analysis, so it's how
+// a reanalysis pass distinguishes rows judged under an older prompt from
+// current ones.
+export const PROMPT_VERSION = 3;
 
 const SYSTEM_PROMPT = `You are analyzing a science news article for ArticleGrade, a site that helps readers build the background knowledge needed to understand real science articles.
 
@@ -31,12 +32,13 @@ Decide the difficulty level BEFORE building the learning path, in this exact ord
 7. Only once the difficulty level is finalized, write difficultyReason explaining it in terms of the breadth/depth/connectedness judgment above — never in terms of sentence/word/jargon count, and never by referencing how many learning path steps follow.
 8. Only after difficulty and difficultyReason are finalized, build the learning path from the prerequisite concepts identified in step 2 (not concepts the article already explains). Order them into a learning sequence, easiest to hardest: the order a reader should learn them in to build up to understanding the article. This is an ordered LEARNING SEQUENCE, not a strict prerequisite dependency graph — note a genuine "must learn A before B" relationship where one truly exists, but don't invent one between every adjacent pair just to justify the ordering. The number of steps here is a consequence of step 2, not evidence for a higher difficulty than already decided — it must not be used to revise the difficulty level chosen in step 5.
 
-For each learning step, provide:
+The learning path's job is not to teach each concept as a self-contained lesson — it exists only to get the reader ready to understand THIS article. For each learning step, provide:
 - id: a short, stable, kebab-case slug unique within this article's path
 - title: the concept's name
 - guidingQuestion: a question a curious reader would ask that this step answers
-- explanation: a short explanation a newcomer to this concept could follow
-- whyNeeded: why learning this concept helps toward understanding the article`;
+- explanation: not a textbook definition of the concept in general — explain only as much of the concept as this specific article's core claim requires a reader to know. If a fuller explanation of the concept wouldn't change how well the reader follows this article, leave it out.
+- checkQuestion: a conceptual question that can only be answered by connecting this step's concept back to the article's actual finding, phenomenon, or claim — not a definition-recall or rote-memorization question, and not a restatement of a sentence from explanation. A reader who only memorized the explanation paragraph without understanding it should not be able to answer this from pattern-matching alone.
+- checkAnswer: a short, clear answer to checkQuestion that makes the connection explicit, so the reader can check their own reasoning and walk away thinking "that's why this concept matters for this article" — not a graded/scored answer, just the explanation revealed.`;
 
 export interface AnalysisInputData {
   title: string;
@@ -52,6 +54,45 @@ export function buildAnalysisInput(
     {
       role: "user",
       content: `Title: ${data.title}\nSummary: ${data.summary}\nCategory: ${data.category}`,
+    },
+  ];
+}
+
+// Used only when backfilling an existing article's Learning Path to the
+// current PROMPT_VERSION without re-judging difficulty (see
+// regenerateLearningPath.ts). difficulty/difficultyReason are given as
+// already-decided facts, not something to re-derive — this keeps a
+// reanalysis pass from ever silently changing an article's difficulty.
+const LEARNING_PATH_ONLY_SYSTEM_PROMPT = `You are building a Learning Path for a science news article on ArticleGrade, a site that helps readers build the background knowledge needed to understand real science articles.
+
+You are given the article's title, one-paragraph summary, category, and a difficulty level (Lv.1-5) with its reason that have ALREADY been decided by a separate process. Do not question, second-guess, or imply a different difficulty than the one given — your only job is to build a learning path that is consistent with that already-decided level (roughly as many prerequisite concepts, at roughly that depth, as the given difficultyReason describes).
+
+Identify the prerequisite concepts a reader must already know to follow the article's core claim — a concept only counts if the article's own summary does NOT already explain it. Order them into a learning sequence, easiest to hardest. This is an ordered LEARNING SEQUENCE, not a strict prerequisite dependency graph — note a genuine "must learn A before B" relationship where one truly exists, but don't invent one between every adjacent pair just to justify the ordering.
+
+The learning path's job is not to teach each concept as a self-contained lesson — it exists only to get the reader ready to understand THIS article. For each learning step, provide:
+- id: a short, stable, kebab-case slug unique within this article's path
+- title: the concept's name
+- guidingQuestion: a question a curious reader would ask that this step answers
+- explanation: not a textbook definition of the concept in general — explain only as much of the concept as this specific article's core claim requires a reader to know. If a fuller explanation of the concept wouldn't change how well the reader follows this article, leave it out.
+- checkQuestion: a conceptual question that can only be answered by connecting this step's concept back to the article's actual finding, phenomenon, or claim — not a definition-recall or rote-memorization question, and not a restatement of a sentence from explanation. A reader who only memorized the explanation paragraph without understanding it should not be able to answer this from pattern-matching alone.
+- checkAnswer: a short, clear answer to checkQuestion that makes the connection explicit, so the reader can check their own reasoning and walk away thinking "that's why this concept matters for this article" — not a graded/scored answer, just the explanation revealed.`;
+
+export interface LearningPathOnlyInputData {
+  title: string;
+  summary: string;
+  category: string;
+  difficulty: number;
+  difficultyReason: string;
+}
+
+export function buildLearningPathOnlyInput(
+  data: LearningPathOnlyInputData
+): OpenAI.Responses.ResponseInput {
+  return [
+    { role: "system", content: LEARNING_PATH_ONLY_SYSTEM_PROMPT },
+    {
+      role: "user",
+      content: `Title: ${data.title}\nSummary: ${data.summary}\nCategory: ${data.category}\nDifficulty: Lv.${data.difficulty}\nDifficultyReason: ${data.difficultyReason}`,
     },
   ];
 }

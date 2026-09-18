@@ -5,7 +5,8 @@ export const AiLearningStepSchema = z.object({
   title: z.string(),
   guidingQuestion: z.string(),
   explanation: z.string(),
-  whyNeeded: z.string(),
+  checkQuestion: z.string(),
+  checkAnswer: z.string(),
 });
 
 export const AiArticleAnalysisSchema = z.object({
@@ -15,3 +16,12 @@ export const AiArticleAnalysisSchema = z.object({
 });
 
 export type AiArticleAnalysis = z.infer<typeof AiArticleAnalysisSchema>;
+
+// Used only for reanalyzing an already-analyzed article's Learning Path
+// (prompt_version backfill) without re-deriving difficulty/difficultyReason —
+// see buildLearningPathOnlyInput in prompt.ts.
+export const AiLearningPathOnlySchema = z.object({
+  learningPath: z.array(AiLearningStepSchema).min(1),
+});
+
+export type AiLearningPathOnly = z.infer<typeof AiLearningPathOnlySchema>;

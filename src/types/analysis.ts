@@ -7,12 +7,17 @@ export interface LearningStep {
   id: string;
   title: string;
   guidingQuestion: string;
-  /** Short explanation a newcomer to this concept can follow. */
+  /** Short explanation, scoped to only what this article's core claim requires. */
   explanation: string;
-  /** Why learning this concept (in this position in the sequence) helps in
-   *  understanding the target article. Not necessarily a strict prerequisite —
-   *  see learningPath's doc comment below. */
-  whyNeeded: string;
+  /** A conceptual question connecting this step back to the article's claim —
+   *  answer revealed via checkAnswer. Absent on prompt_version < 3 rows. */
+  checkQuestion?: string;
+  /** Answer/explanation for checkQuestion. Absent on prompt_version < 3 rows. */
+  checkAnswer?: string;
+  /** @deprecated Legacy field from prompt_version < 3 rows only. Never
+   *  written by current analyses, never rendered by the UI — kept solely so
+   *  old DB rows still satisfy this type when read. */
+  whyNeeded?: string;
 }
 
 export interface ArticleAnalysis {

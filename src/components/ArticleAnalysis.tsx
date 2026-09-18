@@ -42,12 +42,22 @@ export default function ArticleAnalysis({ analysis }: ArticleAnalysisProps) {
                   <span className="text-xs text-zinc-400 group-open:hidden">Show</span>
                   <span className="hidden text-xs text-zinc-400 group-open:inline">Hide</span>
                 </summary>
-                <div className="mt-3 flex flex-col gap-2 pl-7 text-sm leading-relaxed text-zinc-700">
+                <div className="mt-3 flex flex-col gap-3 pl-7 text-sm leading-relaxed text-zinc-700">
                   <p>{step.explanation}</p>
-                  <p className="text-zinc-600">
-                    <span className="font-semibold text-zinc-500">Why you need this: </span>
-                    {step.whyNeeded}
-                  </p>
+                  {step.checkQuestion && step.checkAnswer && (
+                    <div className="border-t border-zinc-100 pt-3">
+                      <p className="text-zinc-600">
+                        <span className="font-semibold text-zinc-500">Check yourself: </span>
+                        {step.checkQuestion}
+                      </p>
+                      <details className="mt-2">
+                        <summary className="cursor-pointer text-xs font-semibold text-zinc-400">
+                          Show answer
+                        </summary>
+                        <p className="mt-2 text-zinc-600">{step.checkAnswer}</p>
+                      </details>
+                    </div>
+                  )}
                 </div>
               </details>
             </li>
