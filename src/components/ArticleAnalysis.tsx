@@ -9,7 +9,7 @@ export default function ArticleAnalysis({ analysis }: ArticleAnalysisProps) {
     return (
       <div className="border-t border-zinc-200 pt-6 text-sm text-zinc-500">
         This article hasn&apos;t been analyzed yet — a difficulty level and
-        prerequisite knowledge aren&apos;t available.
+        learning path aren&apos;t available.
       </div>
     );
   }
@@ -24,19 +24,40 @@ export default function ArticleAnalysis({ analysis }: ArticleAnalysisProps) {
           {analysis.difficultyReason}
         </p>
       </div>
+
       <div>
         <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">
-          Prerequisite Knowledge
+          Learning Path
         </h2>
-        <ol className="mt-2 flex flex-col gap-2">
-          {analysis.prerequisites.map((concept, i) => (
-            <li key={concept} className="flex items-baseline gap-3 text-base text-zinc-700">
-              <span className="font-serif text-zinc-400">{i + 1}.</span>
-              {concept}
+        <ol className="mt-2 flex flex-col divide-y divide-zinc-100 border border-zinc-200">
+          {analysis.learningPath.map((step, i) => (
+            <li key={step.id}>
+              <details className="group p-4">
+                <summary className="flex cursor-pointer list-none items-baseline gap-3">
+                  <span className="font-serif text-zinc-400">{i + 1}.</span>
+                  <span className="flex-1">
+                    <span className="font-semibold text-zinc-900">{step.title}</span>
+                    <span className="ml-2 text-sm text-zinc-500">{step.guidingQuestion}</span>
+                  </span>
+                  <span className="text-xs text-zinc-400 group-open:hidden">Show</span>
+                  <span className="hidden text-xs text-zinc-400 group-open:inline">Hide</span>
+                </summary>
+                <div className="mt-3 flex flex-col gap-2 pl-7 text-sm leading-relaxed text-zinc-700">
+                  <p>{step.explanation}</p>
+                  <p className="text-zinc-600">
+                    <span className="font-semibold text-zinc-500">Why you need this: </span>
+                    {step.whyNeeded}
+                  </p>
+                </div>
+              </details>
             </li>
           ))}
         </ol>
       </div>
+
+      <p className="border-t border-zinc-200 pt-6 font-serif text-lg text-zinc-900">
+        You&apos;re ready to read this article.
+      </p>
     </div>
   );
 }
