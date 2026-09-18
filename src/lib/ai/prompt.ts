@@ -4,7 +4,7 @@ import type OpenAI from "openai";
 // logic changes. completeArticle() stamps it on every analysis, so it's how
 // a reanalysis pass distinguishes rows judged under an older prompt from
 // current ones.
-export const PROMPT_VERSION = 3;
+export const PROMPT_VERSION = 4;
 
 const SYSTEM_PROMPT = `You are analyzing a science news article for ArticleGrade, a site that helps readers build the background knowledge needed to understand real science articles.
 
@@ -36,7 +36,7 @@ The learning path's job is not to teach each concept as a self-contained lesson 
 - id: a short, stable, kebab-case slug unique within this article's path
 - title: the concept's name
 - guidingQuestion: a question a curious reader would ask that this step answers
-- explanation: not a textbook definition of the concept in general — explain only as much of the concept as this specific article's core claim requires a reader to know. If a fuller explanation of the concept wouldn't change how well the reader follows this article, leave it out.
+- explanation: not a textbook definition of the concept in general — explain only as much of the concept as this specific article's core claim requires a reader to know. If a fuller explanation of the concept wouldn't change how well the reader follows this article, leave it out. Assume the reader is meeting this concept for the first time. If explaining it naturally requires another scientific or technical term the reader can't reasonably be expected to already know, define that term in plain language the instant it first appears (inline, same sentence or the next) — never leave a new technical term unexplained, and never define one unfamiliar term by introducing another undefined one. If a technical term isn't actually needed to follow this article's claim, prefer a plain everyday phrase instead of introducing it at all. The explanation must be self-contained: a reader should be able to follow this step from the explanation alone, with no outside lookup. Do not over-define ordinary, non-technical words just to be thorough — only unpack the specific scientific/technical terms that could genuinely block understanding.
 - checkQuestion: a conceptual question that can only be answered by connecting this step's concept back to the article's actual finding, phenomenon, or claim — not a definition-recall or rote-memorization question, and not a restatement of a sentence from explanation. A reader who only memorized the explanation paragraph without understanding it should not be able to answer this from pattern-matching alone.
 - checkAnswer: a short, clear answer to checkQuestion that makes the connection explicit, so the reader can check their own reasoning and walk away thinking "that's why this concept matters for this article" — not a graded/scored answer, just the explanation revealed.`;
 
@@ -73,7 +73,7 @@ The learning path's job is not to teach each concept as a self-contained lesson 
 - id: a short, stable, kebab-case slug unique within this article's path
 - title: the concept's name
 - guidingQuestion: a question a curious reader would ask that this step answers
-- explanation: not a textbook definition of the concept in general — explain only as much of the concept as this specific article's core claim requires a reader to know. If a fuller explanation of the concept wouldn't change how well the reader follows this article, leave it out.
+- explanation: not a textbook definition of the concept in general — explain only as much of the concept as this specific article's core claim requires a reader to know. If a fuller explanation of the concept wouldn't change how well the reader follows this article, leave it out. Assume the reader is meeting this concept for the first time. If explaining it naturally requires another scientific or technical term the reader can't reasonably be expected to already know, define that term in plain language the instant it first appears (inline, same sentence or the next) — never leave a new technical term unexplained, and never define one unfamiliar term by introducing another undefined one. If a technical term isn't actually needed to follow this article's claim, prefer a plain everyday phrase instead of introducing it at all. The explanation must be self-contained: a reader should be able to follow this step from the explanation alone, with no outside lookup. Do not over-define ordinary, non-technical words just to be thorough — only unpack the specific scientific/technical terms that could genuinely block understanding.
 - checkQuestion: a conceptual question that can only be answered by connecting this step's concept back to the article's actual finding, phenomenon, or claim — not a definition-recall or rote-memorization question, and not a restatement of a sentence from explanation. A reader who only memorized the explanation paragraph without understanding it should not be able to answer this from pattern-matching alone.
 - checkAnswer: a short, clear answer to checkQuestion that makes the connection explicit, so the reader can check their own reasoning and walk away thinking "that's why this concept matters for this article" — not a graded/scored answer, just the explanation revealed.`;
 
