@@ -1,0 +1,164 @@
+[
+  {
+    "id": "physics-1",
+    "title": "What Is a Quantum Computer?",
+    "summary": "A gentle introduction to the idea of quantum computing and why scientists think it could one day solve problems ordinary computers cannot.",
+    "category": "physics",
+    "difficulty": 1,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-09-17"
+  },
+  {
+    "id": "computer-science-1",
+    "title": "What Makes an Algorithm 'Smart'?",
+    "summary": "A plain-language look at how step-by-step instructions can produce behavior that feels intelligent, using everyday examples like map apps and recommendation lists.",
+    "category": "computer-science",
+    "difficulty": 1,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-09-15"
+  },
+  {
+    "id": "space-1",
+    "title": "Why Is the Night Sky Dark If There Are So Many Stars?",
+    "summary": "An accessible explainer of Olbers' paradox and what the darkness between the stars tells us about the size and age of the universe.",
+    "category": "space",
+    "difficulty": 1,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-09-13"
+  },
+  {
+    "id": "biology-1",
+    "title": "Why Do Some Animals Live So Much Longer Than Others?",
+    "summary": "From tiny mice to giant tortoises, researchers explore why lifespan varies so dramatically across the animal kingdom.",
+    "category": "biology",
+    "difficulty": 1,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-09-11"
+  },
+  {
+    "id": "physics-2",
+    "title": "Understanding Qubits: The Building Blocks of Quantum Computing",
+    "summary": "This article introduces the qubit, the basic unit of quantum information, and explains how it differs from the ordinary bits used in classical computers.",
+    "category": "physics",
+    "difficulty": 2,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-09-09"
+  },
+  {
+    "id": "computer-science-2",
+    "title": "Neural Networks Explained With Everyday Examples",
+    "summary": "Using simple analogies, this piece walks through how neural networks are structured and why they are good at recognizing patterns in data.",
+    "category": "computer-science",
+    "difficulty": 2,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-09-07"
+  },
+  {
+    "id": "environment-1",
+    "title": "How Do Scientists Measure the Planet's Average Temperature?",
+    "summary": "An overview of the instruments and basic methods researchers use to track global temperature trends over decades.",
+    "category": "environment",
+    "difficulty": 2,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-09-05"
+  },
+  {
+    "id": "biology-2",
+    "title": "CRISPR 101: How Gene Editing Actually Works",
+    "summary": "A beginner-friendly breakdown of how the CRISPR-Cas9 system locates and edits specific sequences of DNA.",
+    "category": "biology",
+    "difficulty": 2,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-09-03"
+  },
+  {
+    "id": "physics-3",
+    "title": "Quantum Entanglement and the Future of Secure Communication",
+    "summary": "Researchers describe how entangled particles could underpin encryption schemes that are fundamentally harder to intercept than today's methods.",
+    "category": "physics",
+    "difficulty": 3,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-08-30"
+  },
+  {
+    "id": "space-2",
+    "title": "Exoplanet Atmospheres: Reading Starlight for Signs of Life",
+    "summary": "By analyzing how starlight filters through a distant planet's atmosphere, astronomers can infer its chemical makeup and search for biosignatures.",
+    "category": "space",
+    "difficulty": 3,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-08-27"
+  },
+  {
+    "id": "environment-2",
+    "title": "Ocean Currents Are Shifting, and Ecosystems Are Taking Notice",
+    "summary": "New observational data links weakening deep-ocean currents to changes in nutrient distribution and regional marine biodiversity.",
+    "category": "environment",
+    "difficulty": 3,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-08-24"
+  },
+  {
+    "id": "biology-3",
+    "title": "Gut Microbiome Diversity Linked to Immune Resilience",
+    "summary": "A study connects the diversity of gut bacteria to how effectively the immune system responds to common infections.",
+    "category": "biology",
+    "difficulty": 3,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-08-21"
+  },
+  {
+    "id": "physics-4",
+    "title": "New Superconducting Qubit Design Cuts Error Rates in Half",
+    "summary": "Engineers detail a modified transmon qubit geometry and pulse-shaping scheme that reduces decoherence-driven gate errors in benchmark circuits.",
+    "category": "physics",
+    "difficulty": 4,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-08-17"
+  },
+  {
+    "id": "computer-science-3",
+    "title": "A New Sparse Attention Mechanism Cuts Inference Cost by 40 Percent",
+    "summary": "The paper introduces a learned sparsity pattern for transformer attention layers, reporting substantial inference speedups with minimal accuracy loss on standard benchmarks.",
+    "category": "computer-science",
+    "difficulty": 4,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-08-13"
+  },
+  {
+    "id": "environment-3",
+    "title": "Satellite LIDAR Mapping Reveals Accelerating Peatland Carbon Loss",
+    "summary": "High-resolution LIDAR surveys combined with soil-core sampling show carbon release from degraded peatlands is accelerating faster than earlier models predicted.",
+    "category": "environment",
+    "difficulty": 4,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-08-09"
+  },
+  {
+    "id": "biology-4",
+    "title": "Cryo-EM Structure of a Novel Membrane Transport Protein Complex",
+    "summary": "Using cryo-electron microscopy, researchers resolve a previously unknown conformational state of a membrane transporter, with implications for drug-binding site design.",
+    "category": "biology",
+    "difficulty": 5,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-08-04"
+  },
+  {
+    "id": "computer-science-4",
+    "title": "Formal Verification of Byzantine Fault-Tolerant Consensus Protocols",
+    "summary": "The authors present a machine-checked proof of safety and liveness for a variant of PBFT under partial synchrony, formalized in a proof assistant.",
+    "category": "computer-science",
+    "difficulty": 5,
+    "source": "IEEE Spectrum",
+    "publishedAt": "2026-07-30"
+  },
+  {
+    "id": "space-3",
+    "title": "Constraining Dark Energy With Type Ia Supernova Standard Candles",
+    "summary": "A new supernova survey refines the equation-of-state parameter for dark energy, tightening constraints derived from luminosity-distance measurements.",
+    "category": "space",
+    "difficulty": 5,
+    "source": "ScienceDaily",
+    "publishedAt": "2026-07-25"
+  }
+]
