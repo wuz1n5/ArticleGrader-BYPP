@@ -14,7 +14,7 @@ export default async function ArticlePage({ params }: PageProps<"/articles/[id]"
     notFound();
   }
 
-  const analysis = getArticleAnalysis(article.id);
+  const analysis = await getArticleAnalysis(article);
   const categoryInfo = getCategory(article.category);
 
   return (

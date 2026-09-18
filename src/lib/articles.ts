@@ -1,5 +1,6 @@
 import articlesData from "@/data/articles.json";
 import { getScienceDailyArticles } from "@/lib/rss/getScienceDailyArticles";
+import { getCompletedAnalyses } from "@/lib/db/articleAnalysisRepository";
 import type { Article, CategorySlug, DifficultyLevel } from "@/types/article";
 
 const mockArticles: Article[] = articlesData as Article[];
@@ -14,6 +15,17 @@ export interface HomeArticles {
   rest: Article[];
 }
 
+// Pure DB read — no OpenAI call in this path. Difficulty comes entirely from
+// whatever the cron job (src/app/api/analyze/route.ts) has already analyzed
+// and stored; one batched query covers every article in the current feed.
+async function enrichWithStoredDifficulty(articles: Article[]): Promise<Article[]> {
+  const analyses = await getCompletedAnalyses(articles.map((a) => a.id));
+  return articles.map((a) => ({
+    ...a,
+    difficulty: analyses.get(a.id)?.difficulty ?? null,
+  }));
+}
+
 async function getAllArticles(): Promise<Article[]> {
   const result = await getScienceDailyArticles();
 
@@ -23,7 +35,10 @@ async function getAllArticles(): Promise<Article[]> {
 
   const rssArticles = result.ok ? result.articles : [];
   const isDev = process.env.NODE_ENV !== "production";
-  return rssArticles.length === 0 && isDev ? mockArticles : rssArticles;
+  if (rssArticles.length === 0 && isDev) {
+    return mockArticles; // dev-only fallback — already has real difficulty, not DB-enriched
+  }
+  return enrichWithStoredDifficulty(rssArticles);
 }
 
 export async function getHomeArticles(filter: ArticleFilter): Promise<HomeArticles> {
