@@ -4,10 +4,27 @@ import { claimArticle, completeArticle } from "@/lib/db/articleAnalysisRepositor
 import { analyzeArticle } from "@/lib/ai/analyzeArticle";
 import { limitAnalysisConcurrency } from "@/lib/ai/concurrencyLimit";
 import { getCategoryName } from "@/lib/categories";
+import type { Article } from "@/types/article";
 
-export const maxDuration = 60;
+// 300 is Vercel Hobby's actual default/max function duration under Fluid
+// Compute (enabled by default for projects created after 2025-04-23). If
+// this project has Fluid Compute disabled, lower this and BATCH_SIZE below
+// to match the project's actual duration limit.
+export const maxDuration = 300;
 
 const SOURCE = "sciencedaily";
+
+// A single invocation only ever claims up to this many articles — bounds one
+// run to BATCH_SIZE / MAX_CONCURRENT_AI_CALLS rounds at the per-call
+// timeout, which safely fits inside maxDuration even in the worst case.
+// Every article currently in the feed is still eventually in scope: articles
+// beyond this batch aren't touched at all this run (no claim attempt), so
+// they're immediately claimable — not stuck behind the 1-hour stale-reclaim
+// window — by the next cron run or a manual re-trigger. This is a
+// serverless execution-unit limit, not a product-visible article limit: the
+// homepage/detail pages just read whatever is 'complete' in the DB and have
+// no notion of batches.
+const BATCH_SIZE = 15;
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
@@ -24,21 +41,23 @@ export async function GET(request: NextRequest) {
 
   const articles = feed.articles;
 
-  // Claim first (cheap DB writes, safe to do for the whole feed at once) —
-  // every article currently in the feed is in scope, never an arbitrary
-  // subset. Only articles this call actually wins the claim for proceed to
-  // an OpenAI call; everything else is already complete or claimed by
-  // another run/duplicate delivery.
-  const claimResults = await Promise.all(
-    articles.map(async (article) => ({
-      article,
-      claimed: await claimArticle(article.id, SOURCE, article.category),
-    }))
-  );
-  const toAnalyze = claimResults.filter((c) => c.claimed).map((c) => c.article);
+  // Walk the feed in order, attempting claims one at a time and stopping the
+  // moment BATCH_SIZE succeed. Already-complete articles simply fail the
+  // claim (claimArticle is a no-op in that case) and are skipped for free,
+  // so each day's run naturally picks up wherever the previous run left off
+  // — no separate cursor/offset state needed.
+  const claimed: Article[] = [];
+  let attempted = 0;
+  for (const article of articles) {
+    if (claimed.length >= BATCH_SIZE) break;
+    attempted++;
+    if (await claimArticle(article.id, SOURCE, article.category)) {
+      claimed.push(article);
+    }
+  }
 
   const outcomes = await Promise.allSettled(
-    toAnalyze.map((article) =>
+    claimed.map((article) =>
       limitAnalysisConcurrency(async () => {
         const analysis = await analyzeArticle({
           title: article.title,
@@ -62,7 +81,8 @@ export async function GET(request: NextRequest) {
   return Response.json({
     ok: true,
     totalInFeed: articles.length,
-    claimed: toAnalyze.length,
+    attempted,
+    claimed: claimed.length,
     succeeded,
     failed: failed.length,
   });
