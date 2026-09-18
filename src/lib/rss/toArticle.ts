@@ -1,8 +1,6 @@
 import type { Article, CategorySlug } from "@/types/article";
 import type { RssItem } from "./types";
 
-const DEFAULT_CATEGORY: CategorySlug = "physics"; // physics.xml feed maps 1:1 — not a classifier
-
 // Minimal local normalization, not a general HTML parser: strips stray inline
 // tags/entities the feed occasionally includes, nothing more.
 function stripHtml(value: string): string {
@@ -15,14 +13,18 @@ function stripHtml(value: string): string {
     .trim();
 }
 
+// categories: every ScienceDaily feed this item was found in (see
+// getScienceDailyArticles.ts) — always at least 1. `category` is derived as
+// categories[0] purely for the single-badge UI; nothing else reads it.
 // TEMPORARY: difficulty is null until prerequisite-based analysis exists —
 // never replace with a guessed value.
-export function rssItemToArticle(item: RssItem): Article {
+export function rssItemToArticle(item: RssItem, categories: CategorySlug[]): Article {
   return {
     id: item.guid ?? item.link,
     title: item.title,
     summary: stripHtml(item.description),
-    category: DEFAULT_CATEGORY,
+    categories,
+    category: categories[0],
     difficulty: null,
     source: "ScienceDaily",
     publishedAt: new Date(item.pubDate).toISOString(), // pubDate already validated in parseRssXml

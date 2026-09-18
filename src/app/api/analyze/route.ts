@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
   for (const article of articles) {
     if (claimed.length >= BATCH_SIZE) break;
     attempted++;
-    if (await claimArticle(article.id, SOURCE, article.category)) {
+    if (await claimArticle(article.id, SOURCE, article.categories)) {
       claimed.push(article);
     }
   }
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
         const analysis = await analyzeArticle({
           title: article.title,
           summary: article.summary,
-          category: getCategoryName(article.category),
+          category: article.categories.map(getCategoryName).join(", "),
         });
         await completeArticle(article.id, analysis);
         return article.id;

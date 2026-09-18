@@ -49,12 +49,12 @@ export async function getCompletedAnalyses(
 export async function claimArticle(
   articleId: string,
   source: string,
-  category: string
+  categories: string[]
 ): Promise<boolean> {
   const sql = getSql();
   const rows = await sql`
     INSERT INTO article_analysis (article_id, source, category, status, claimed_at)
-    VALUES (${articleId}, ${source}, ${category}, 'pending', now())
+    VALUES (${articleId}, ${source}, ${categories}, 'pending', now())
     ON CONFLICT (article_id) DO UPDATE
       SET claimed_at = now()
       WHERE article_analysis.status = 'pending'

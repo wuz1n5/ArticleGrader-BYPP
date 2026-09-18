@@ -3,7 +3,13 @@ import { getScienceDailyArticles } from "@/lib/rss/getScienceDailyArticles";
 import { getCompletedAnalyses } from "@/lib/db/articleAnalysisRepository";
 import type { Article, CategorySlug, DifficultyLevel } from "@/types/article";
 
-const mockArticles: Article[] = articlesData as Article[];
+// Mock JSON only has a single `category` field (pre-dates multi-category RSS
+// support) — normalize in memory so mock articles satisfy the same Article
+// shape as RSS-derived ones. The JSON file itself is untouched.
+const mockArticles: Article[] = (articlesData as Omit<Article, "categories">[]).map((a) => ({
+  ...a,
+  categories: [a.category],
+}));
 
 export interface ArticleFilter {
   category?: CategorySlug;
@@ -45,7 +51,7 @@ export async function getHomeArticles(filter: ArticleFilter): Promise<HomeArticl
   const source = await getAllArticles();
 
   const filtered = source
-    .filter((a) => !filter.category || a.category === filter.category)
+    .filter((a) => !filter.category || a.categories.includes(filter.category))
     .filter((a) => !filter.difficulty || a.difficulty === filter.difficulty)
     .sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt));
 
