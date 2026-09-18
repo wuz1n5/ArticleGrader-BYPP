@@ -20,7 +20,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       ? difficultyNumber
       : undefined;
 
-  const { featured, rest } = getHomeArticles({ category, difficulty });
+  const { featured, rest } = await getHomeArticles({ category, difficulty });
 
   return (
     <>

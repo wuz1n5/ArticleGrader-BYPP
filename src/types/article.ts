@@ -12,7 +12,10 @@ export interface Article {
   title: string;
   summary: string;
   category: CategorySlug;
-  difficulty: DifficultyLevel;
+  /** TEMPORARY: null means "not yet analyzed" — never replace with a guessed value. */
+  difficulty: DifficultyLevel | null;
   source: string;
   publishedAt: string;
+  /** External source URL (e.g. the ScienceDaily article). Absent for mock articles. */
+  originalUrl?: string;
 }

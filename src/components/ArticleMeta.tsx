@@ -4,7 +4,7 @@ import type { CategorySlug, DifficultyLevel } from "@/types/article";
 
 interface ArticleMetaProps {
   category: CategorySlug;
-  difficulty: DifficultyLevel;
+  difficulty: DifficultyLevel | null;
   source: string;
   publishedAt: string;
   size?: "default" | "large";
@@ -18,7 +18,7 @@ export default function ArticleMeta({
   size = "default",
 }: ArticleMetaProps) {
   const categoryInfo = getCategory(category);
-  const difficultyInfo = getDifficulty(difficulty);
+  const difficultyInfo = difficulty !== null ? getDifficulty(difficulty) : undefined;
   const date = new Date(publishedAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -44,7 +44,7 @@ export default function ArticleMeta({
               <span
                 key={d.level}
                 className={`${dotSize} rounded-full ${
-                  d.level <= difficulty ? difficultyInfo.fillClass : "bg-zinc-200"
+                  d.level <= difficultyInfo.level ? difficultyInfo.fillClass : "bg-zinc-200"
                 }`}
               />
             ))}

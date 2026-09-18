@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ArticleMeta from "@/components/ArticleMeta";
 import { getCategory } from "@/lib/categories";
 import type { Article } from "@/types/article";
@@ -17,7 +18,7 @@ export default function FeaturedArticle({ article }: FeaturedArticleProps) {
           Featured
         </p>
         <h2 className="font-serif text-4xl leading-tight text-zinc-900 sm:text-5xl">
-          {article.title}
+          <Link href={`/articles/${encodeURIComponent(article.id)}`}>{article.title}</Link>
         </h2>
         <p className="max-w-2xl text-lg leading-relaxed text-zinc-600">
           {article.summary}
