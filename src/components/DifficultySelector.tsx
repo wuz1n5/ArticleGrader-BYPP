@@ -20,34 +20,50 @@ export default function DifficultySelector({
   categoryParam,
 }: DifficultySelectorProps) {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-4">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-        Reading Level
-      </p>
-      <div className="flex flex-wrap gap-2 text-sm font-medium">
-        <Link
-          href={buildHref(undefined, categoryParam)}
-          className={
-            !activeDifficulty
-              ? "rounded-full bg-zinc-900 px-3 py-1 text-white"
-              : "rounded-full border border-zinc-300 px-3 py-1 text-zinc-600 hover:border-zinc-400"
-          }
-        >
-          All Levels
-        </Link>
-        {DIFFICULTY_LEVELS.map((difficulty) => (
+    <div className="border-b border-zinc-200 bg-zinc-50">
+      <div className="mx-auto max-w-5xl px-6 py-5">
+        <div className="mb-3 flex items-baseline justify-between">
+          <p className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+            Reading Level
+          </p>
           <Link
-            key={difficulty.level}
-            href={buildHref(difficulty.level, categoryParam)}
+            href={buildHref(undefined, categoryParam)}
             className={
-              activeDifficulty === difficulty.level
-                ? "rounded-full bg-zinc-900 px-3 py-1 text-white"
-                : "rounded-full border border-zinc-300 px-3 py-1 text-zinc-600 hover:border-zinc-400"
+              !activeDifficulty
+                ? "text-xs font-semibold text-zinc-900 underline underline-offset-4"
+                : "text-xs font-semibold text-zinc-500 hover:text-zinc-900"
             }
           >
-            {difficulty.label}
+            All Levels
           </Link>
-        ))}
+        </div>
+        <div className="flex divide-x divide-zinc-300 border border-zinc-300 bg-white">
+          {DIFFICULTY_LEVELS.map((difficulty) => {
+            const isActive = activeDifficulty === difficulty.level;
+            return (
+              <Link
+                key={difficulty.level}
+                href={buildHref(difficulty.level, categoryParam)}
+                className={`flex min-h-[52px] flex-1 flex-col items-center justify-center gap-0.5 px-1 py-2 text-center transition-colors ${
+                  isActive
+                    ? `${difficulty.fillClass} text-white`
+                    : "text-zinc-700 hover:bg-zinc-100"
+                }`}
+              >
+                <span className="text-base font-bold leading-none">
+                  {difficulty.shortLabel}
+                </span>
+                <span
+                  className={`hidden text-[11px] leading-none sm:block ${
+                    isActive ? "text-white/80" : "text-zinc-500"
+                  }`}
+                >
+                  {difficulty.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

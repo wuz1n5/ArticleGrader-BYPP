@@ -15,20 +15,20 @@ function buildHref(category: string | undefined, difficultyParam: string | undef
   return query ? `/?${query}` : "/";
 }
 
+const linkBase =
+  "shrink-0 border-b-2 border-transparent pb-3 pt-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 hover:text-zinc-900";
+const linkActive = "border-b-2 pb-3 pt-3 text-xs font-semibold uppercase tracking-wide text-zinc-900";
+
 export default function CategoryNav({
   activeCategory,
   difficultyParam,
 }: CategoryNavProps) {
   return (
     <nav className="border-b border-zinc-200 bg-white">
-      <div className="mx-auto flex max-w-5xl flex-wrap gap-x-6 gap-y-2 px-6 py-3 text-sm font-medium">
+      <div className="no-scrollbar mx-auto flex max-w-5xl gap-x-8 overflow-x-auto px-6 whitespace-nowrap">
         <Link
           href={buildHref(undefined, difficultyParam)}
-          className={
-            !activeCategory
-              ? "text-zinc-900 underline underline-offset-4"
-              : "text-zinc-500 hover:text-zinc-900"
-          }
+          className={!activeCategory ? `${linkActive} border-zinc-900` : linkBase}
         >
           All Fields
         </Link>
@@ -38,8 +38,8 @@ export default function CategoryNav({
             href={buildHref(category.slug, difficultyParam)}
             className={
               activeCategory === category.slug
-                ? "text-zinc-900 underline underline-offset-4"
-                : "text-zinc-500 hover:text-zinc-900"
+                ? `${linkActive} ${category.borderClass}`
+                : linkBase
             }
           >
             {category.name}

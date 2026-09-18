@@ -3,40 +3,47 @@ import type { DifficultyLevel } from "@/types/article";
 export interface DifficultyInfo {
   level: DifficultyLevel;
   label: string;
+  shortLabel: string;
   description: string;
-  badgeClass: string;
+  /** Fill color for meter dots / segmented scale at this level, graduated light-to-dark. */
+  fillClass: string;
 }
 
 export const DIFFICULTY_LEVELS: DifficultyInfo[] = [
   {
     level: 1,
-    label: "Lv.1 Beginner",
+    label: "Beginner",
+    shortLabel: "Lv.1",
     description: "A science story readable with no background knowledge.",
-    badgeClass: "bg-zinc-100 text-zinc-600",
+    fillClass: "bg-zinc-400",
   },
   {
     level: 2,
-    label: "Lv.2 Basic",
+    label: "Basic",
+    shortLabel: "Lv.2",
     description: "A few basic scientific terms appear.",
-    badgeClass: "bg-zinc-200 text-zinc-700",
+    fillClass: "bg-zinc-500",
   },
   {
     level: 3,
-    label: "Lv.3 Intermediate",
+    label: "Intermediate",
+    shortLabel: "Lv.3",
     description: "Requires familiarity with several scientific concepts.",
-    badgeClass: "bg-zinc-300 text-zinc-800",
+    fillClass: "bg-zinc-600",
   },
   {
     level: 4,
-    label: "Lv.4 Advanced",
+    label: "Advanced",
+    shortLabel: "Lv.4",
     description: "Covers algorithms, experimental methods, and technical principles.",
-    badgeClass: "bg-zinc-600 text-white",
+    fillClass: "bg-zinc-800",
   },
   {
     level: 5,
-    label: "Lv.5 Expert",
+    label: "Expert",
+    shortLabel: "Lv.5",
     description: "Research-paper-like content with formulas, methods, and jargon.",
-    badgeClass: "bg-zinc-900 text-white",
+    fillClass: "bg-zinc-900",
   },
 ];
 
@@ -45,7 +52,8 @@ export function getDifficulty(level: DifficultyLevel): DifficultyInfo | undefine
 }
 
 export function getDifficultyLabel(level: DifficultyLevel): string {
-  return getDifficulty(level)?.label ?? `Lv.${level}`;
+  const info = getDifficulty(level);
+  return info ? `${info.shortLabel} ${info.label}` : `Lv.${level}`;
 }
 
 export function isDifficultyLevel(value: number): value is DifficultyLevel {

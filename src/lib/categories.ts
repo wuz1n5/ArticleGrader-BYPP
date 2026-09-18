@@ -3,19 +3,50 @@ import type { CategorySlug } from "@/types/article";
 export interface Category {
   slug: CategorySlug;
   name: string;
-  badgeClass: string;
+  /** Kicker text color for this category's accent (no background chip). */
+  textClass: string;
+  /** Active-state underline color for section navigation. */
+  borderClass: string;
+  /** Solid accent bar color, used next to the Featured article. */
+  barClass: string;
 }
 
 export const CATEGORIES: Category[] = [
-  { slug: "physics", name: "Physics", badgeClass: "bg-blue-50 text-blue-700" },
-  { slug: "biology", name: "Biology", badgeClass: "bg-green-50 text-green-700" },
+  {
+    slug: "physics",
+    name: "Physics",
+    textClass: "text-blue-700",
+    borderClass: "border-blue-600",
+    barClass: "bg-blue-600",
+  },
+  {
+    slug: "biology",
+    name: "Biology",
+    textClass: "text-green-700",
+    borderClass: "border-green-600",
+    barClass: "bg-green-600",
+  },
   {
     slug: "computer-science",
     name: "Computer Science",
-    badgeClass: "bg-violet-50 text-violet-700",
+    textClass: "text-violet-700",
+    borderClass: "border-violet-600",
+    barClass: "bg-violet-600",
   },
-  { slug: "space", name: "Space", badgeClass: "bg-indigo-50 text-indigo-700" },
-  { slug: "environment", name: "Environment", badgeClass: "bg-amber-50 text-amber-700" },
+  {
+    slug: "space",
+    name: "Space",
+    textClass: "text-indigo-700",
+    borderClass: "border-indigo-600",
+    barClass: "bg-indigo-600",
+  },
+  {
+    slug: "environment",
+    name: "Environment",
+    textClass: "text-amber-700",
+    borderClass: "border-amber-600",
+    barClass: "bg-amber-600",
+  },
 ];
 
 export function getCategory(slug: CategorySlug): Category | undefined {
