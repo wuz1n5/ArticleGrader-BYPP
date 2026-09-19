@@ -35,7 +35,7 @@ export default async function ArticlePage({ params }: PageProps<"/articles/[id]"
           publishedAt={article.publishedAt}
           size="large"
         />
-        <SubfieldTags subfields={article.subfields} />
+        <SubfieldTags subfields={article.subfields} category={article.category} />
         <p className="text-lg leading-relaxed text-zinc-700">{article.summary}</p>
         <ArticleAnalysis analysis={analysis} />
         {article.originalUrl && (

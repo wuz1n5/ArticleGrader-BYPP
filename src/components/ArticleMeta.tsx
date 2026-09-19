@@ -8,6 +8,8 @@ interface ArticleMetaProps {
   source: string;
   publishedAt: string;
   size?: "default" | "large";
+  /** Which parts to render, in order. Defaults to all three (identical to previous behavior). */
+  parts?: Array<"category" | "difficulty" | "source">;
 }
 
 export default function ArticleMeta({
@@ -16,6 +18,7 @@ export default function ArticleMeta({
   source,
   publishedAt,
   size = "default",
+  parts = ["category", "difficulty", "source"],
 }: ArticleMetaProps) {
   const categoryInfo = getCategory(category);
   const difficultyInfo = difficulty !== null ? getDifficulty(difficulty) : undefined;
@@ -30,14 +33,14 @@ export default function ArticleMeta({
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {categoryInfo && (
+      {parts.includes("category") && categoryInfo && (
         <span
           className={`${kickerSize} font-bold uppercase tracking-wider ${categoryInfo.textClass}`}
         >
           {categoryInfo.name}
         </span>
       )}
-      {difficultyInfo && (
+      {parts.includes("difficulty") && difficultyInfo && (
         <span className="flex items-center gap-1.5">
           <span className="flex items-center gap-0.5">
             {DIFFICULTY_LEVELS.map((d) => (
@@ -51,12 +54,15 @@ export default function ArticleMeta({
           </span>
           <span className={`${kickerSize} font-semibold text-zinc-700`}>
             {difficultyInfo.shortLabel}
+            {size === "large" ? ` · ${difficultyInfo.label}` : ""}
           </span>
         </span>
       )}
-      <span className="text-xs text-zinc-500">
-        {source} · {date}
-      </span>
+      {parts.includes("source") && (
+        <span className="text-xs text-zinc-500">
+          {source} · {date}
+        </span>
+      )}
     </div>
   );
 }
