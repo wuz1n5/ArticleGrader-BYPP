@@ -1,36 +1,12 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-
-const STORAGE_KEY = "articlegrade:savedArticles";
-const CHANGE_EVENT = "articlegrade:savedArticles-change";
-
-function readSavedIds(): string[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeSavedIds(ids: string[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-  } catch {
-    // localStorage unavailable (private mode, quota) — save is best-effort only
-  }
-  window.dispatchEvent(new Event(CHANGE_EVENT));
-}
-
-function subscribe(callback: () => void) {
-  window.addEventListener(CHANGE_EVENT, callback);
-  return () => window.removeEventListener(CHANGE_EVENT, callback);
-}
-
-function getServerSnapshot() {
-  return false;
-}
+import {
+  readSavedIds,
+  toggleSavedArticle,
+  subscribeToSavedArticles,
+  getServerSavedIds,
+} from "@/lib/savedArticles";
 
 interface SaveButtonProps {
   articleId: string;
@@ -39,13 +15,13 @@ interface SaveButtonProps {
 
 // useSyncExternalStore reads localStorage — this is the standard React
 // pattern for an external mutable source, and it's what keeps SSR markup
-// (getServerSnapshot -> false) and the client's first paint in sync without
-// a hydration mismatch.
+// (getServerSavedIds -> []) and the client's first paint in sync without a
+// hydration mismatch.
 export default function SaveButton({ articleId, className }: SaveButtonProps) {
   const saved = useSyncExternalStore(
-    subscribe,
+    subscribeToSavedArticles,
     () => readSavedIds().includes(articleId),
-    getServerSnapshot
+    () => getServerSavedIds().includes(articleId)
   );
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
@@ -54,10 +30,7 @@ export default function SaveButton({ articleId, className }: SaveButtonProps) {
     // cheap safeguard against any future nesting.
     e.preventDefault();
     e.stopPropagation();
-
-    const ids = readSavedIds();
-    const next = saved ? ids.filter((id) => id !== articleId) : [...ids, articleId];
-    writeSavedIds(next);
+    toggleSavedArticle(articleId);
   }
 
   return (
