@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ArticleMeta from "@/components/ArticleMeta";
 import SubfieldTags from "@/components/SubfieldTags";
+import SaveButton from "@/components/SaveButton";
 import { getCategory } from "@/lib/categories";
 import type { Article } from "@/types/article";
 
@@ -13,10 +14,11 @@ export default function FeaturedArticle({ article }: FeaturedArticleProps) {
 
   return (
     <article
-      className={`flex gap-5 border-b-2 border-zinc-900 p-6 sm:p-8 ${categoryInfo?.tintBgClass ?? ""}`}
+      className={`relative flex gap-5 border-b-2 border-zinc-900 p-6 sm:p-8 ${categoryInfo?.tintBgClass ?? ""}`}
     >
+      <SaveButton articleId={article.id} className="absolute top-6 right-6 sm:top-8 sm:right-8" />
       <div className={`w-1.5 shrink-0 rounded-full ${categoryInfo?.barClass ?? "bg-zinc-900"}`} />
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 pr-6">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
           Featured
         </p>

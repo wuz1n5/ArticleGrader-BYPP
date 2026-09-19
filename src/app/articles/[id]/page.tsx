@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ArticleMeta from "@/components/ArticleMeta";
 import ArticleAnalysis from "@/components/ArticleAnalysis";
 import SubfieldTags from "@/components/SubfieldTags";
+import SaveButton from "@/components/SaveButton";
 import { getArticleById } from "@/lib/articles";
 import { getArticleAnalysis } from "@/lib/analysis";
 import { getCategory } from "@/lib/categories";
@@ -25,9 +26,12 @@ export default async function ArticlePage({ params }: PageProps<"/articles/[id]"
       </Link>
       <article className="mt-6 flex flex-col gap-6">
         <div className={`h-1.5 w-16 rounded-full ${categoryInfo?.barClass ?? "bg-zinc-900"}`} />
-        <h1 className="font-serif text-4xl leading-tight text-zinc-900 sm:text-5xl">
-          {article.title}
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="font-serif text-4xl leading-tight text-zinc-900 sm:text-5xl">
+            {article.title}
+          </h1>
+          <SaveButton articleId={article.id} className="mt-2 shrink-0" />
+        </div>
         <ArticleMeta
           category={article.category}
           difficulty={analysis?.difficulty ?? article.difficulty}

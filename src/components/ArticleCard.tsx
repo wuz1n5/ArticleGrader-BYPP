@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ArticleMeta from "@/components/ArticleMeta";
 import SubfieldTags from "@/components/SubfieldTags";
+import SaveButton from "@/components/SaveButton";
 import { getCategory } from "@/lib/categories";
 import type { Article } from "@/types/article";
 
@@ -16,7 +17,8 @@ export default function ArticleCard({ article }: ArticleCardProps) {
       <div
         className={`absolute inset-x-0 top-0 h-[3px] opacity-70 transition-opacity group-hover:opacity-100 ${categoryInfo?.barClass ?? "bg-zinc-300"}`}
       />
-      <div className="flex flex-col gap-2">
+      <SaveButton articleId={article.id} className="absolute top-3 right-3" />
+      <div className="flex flex-col gap-2 pr-6">
         <ArticleMeta
           category={article.category}
           difficulty={article.difficulty}
