@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArticleMeta from "@/components/ArticleMeta";
 import ArticleAnalysis from "@/components/ArticleAnalysis";
+import SubfieldTags from "@/components/SubfieldTags";
 import { getArticleById } from "@/lib/articles";
 import { getArticleAnalysis } from "@/lib/analysis";
 import { getCategory } from "@/lib/categories";
@@ -34,6 +35,7 @@ export default async function ArticlePage({ params }: PageProps<"/articles/[id]"
           publishedAt={article.publishedAt}
           size="large"
         />
+        <SubfieldTags subfields={article.subfields} />
         <p className="text-lg leading-relaxed text-zinc-700">{article.summary}</p>
         <ArticleAnalysis analysis={analysis} />
         {article.originalUrl && (

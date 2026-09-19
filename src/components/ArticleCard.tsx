@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ArticleMeta from "@/components/ArticleMeta";
+import SubfieldTags from "@/components/SubfieldTags";
 import type { Article } from "@/types/article";
 
 interface ArticleCardProps {
@@ -15,13 +16,14 @@ export default function ArticleCard({ article }: ArticleCardProps) {
       <p className="line-clamp-3 text-sm leading-relaxed text-zinc-600">
         {article.summary}
       </p>
-      <div className="mt-auto border-t border-zinc-100 pt-3">
+      <div className="mt-auto flex flex-col gap-2 border-t border-zinc-100 pt-3">
         <ArticleMeta
           category={article.category}
           difficulty={article.difficulty}
           source={article.source}
           publishedAt={article.publishedAt}
         />
+        <SubfieldTags subfields={article.subfields} />
       </div>
     </article>
   );

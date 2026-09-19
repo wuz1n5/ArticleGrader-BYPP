@@ -96,3 +96,31 @@ export function buildLearningPathOnlyInput(
     },
   ];
 }
+
+// Independent of difficulty/learning-path generation — not versioned by
+// PROMPT_VERSION, which tracks only the difficulty-judging/learning-path
+// prompt (see the comment on PROMPT_VERSION above). Picks 1-3 tags from a
+// fixed taxonomy (src/lib/subfields.ts) describing the article's specific
+// subtopic — display-only, never invented outside the given list.
+const SUBFIELDS_SYSTEM_PROMPT = `You are tagging a science news article on ArticleGrade with subfield tags — small labels that let a reader quickly see the article's specific subtopic (e.g. "Cybersecurity" vs. "Artificial Intelligence" within Computer Science).
+
+You are given the article's title, one-paragraph summary, its category/categories, and the exact list of allowed subfield tags for those categories. Choose 1 to 3 tags that best describe this specific article's actual content — never choose a tag just because a keyword from its name appears in the text; choose it because the article's core subject matter genuinely belongs to that subfield. Prefer fewer, more precise tags over padding to 3. You MUST choose only from the exact allowed list given to you — never invent a new tag name, never alter the spelling or wording of a listed tag.`;
+
+export interface SubfieldsInputData {
+  title: string;
+  summary: string;
+  category: string;
+  allowedSubfields: string[];
+}
+
+export function buildSubfieldsInput(
+  data: SubfieldsInputData
+): OpenAI.Responses.ResponseInput {
+  return [
+    { role: "system", content: SUBFIELDS_SYSTEM_PROMPT },
+    {
+      role: "user",
+      content: `Title: ${data.title}\nSummary: ${data.summary}\nCategory: ${data.category}\nAllowed tags: ${data.allowedSubfields.join(", ")}`,
+    },
+  ];
+}

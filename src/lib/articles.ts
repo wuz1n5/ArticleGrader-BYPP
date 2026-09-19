@@ -6,10 +6,13 @@ import type { Article, CategorySlug, DifficultyLevel } from "@/types/article";
 // Mock JSON only has a single `category` field (pre-dates multi-category RSS
 // support) — normalize in memory so mock articles satisfy the same Article
 // shape as RSS-derived ones. The JSON file itself is untouched.
-const mockArticles: Article[] = (articlesData as Omit<Article, "categories">[]).map((a) => ({
-  ...a,
-  categories: [a.category],
-}));
+const mockArticles: Article[] = (articlesData as Omit<Article, "categories" | "subfields">[]).map(
+  (a) => ({
+    ...a,
+    categories: [a.category],
+    subfields: [],
+  })
+);
 
 export interface ArticleFilter {
   category?: CategorySlug;
@@ -29,6 +32,7 @@ async function enrichWithStoredDifficulty(articles: Article[]): Promise<Article[
   return articles.map((a) => ({
     ...a,
     difficulty: analyses.get(a.id)?.difficulty ?? null,
+    subfields: analyses.get(a.id)?.subfields ?? [],
   }));
 }
 

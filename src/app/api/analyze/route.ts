@@ -1,9 +1,15 @@
 import type { NextRequest } from "next/server";
 import { getScienceDailyArticles } from "@/lib/rss/getScienceDailyArticles";
-import { claimArticle, completeArticle } from "@/lib/db/articleAnalysisRepository";
+import {
+  claimArticle,
+  completeArticle,
+  updateArticleSubfields,
+} from "@/lib/db/articleAnalysisRepository";
 import { analyzeArticle } from "@/lib/ai/analyzeArticle";
+import { generateSubfields } from "@/lib/ai/generateSubfields";
 import { limitAnalysisConcurrency } from "@/lib/ai/concurrencyLimit";
 import { getCategoryName } from "@/lib/categories";
+import { getAllowedSubfields } from "@/lib/subfields";
 import type { Article } from "@/types/article";
 
 // 300 is Vercel Hobby's actual default/max function duration under Fluid
@@ -65,6 +71,21 @@ export async function GET(request: NextRequest) {
           category: article.categories.map(getCategoryName).join(", "),
         });
         await completeArticle(article.id, analysis);
+
+        // Best-effort, independent of difficulty/learning_path: a subfields
+        // failure must never undo or block the difficulty completion above.
+        try {
+          const subfields = await generateSubfields({
+            title: article.title,
+            summary: article.summary,
+            category: article.categories.map(getCategoryName).join(", "),
+            allowedSubfields: getAllowedSubfields(article.categories),
+          });
+          await updateArticleSubfields(article.id, subfields);
+        } catch (err) {
+          console.error("[cron] subfields generation failed:", article.id, err);
+        }
+
         return article.id;
       })
     )

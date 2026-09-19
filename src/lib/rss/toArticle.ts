@@ -26,6 +26,7 @@ export function rssItemToArticle(item: RssItem, categories: CategorySlug[]): Art
     categories,
     category: categories[0],
     difficulty: null,
+    subfields: [],
     source: "ScienceDaily",
     publishedAt: new Date(item.pubDate).toISOString(), // pubDate already validated in parseRssXml
     originalUrl: item.link,

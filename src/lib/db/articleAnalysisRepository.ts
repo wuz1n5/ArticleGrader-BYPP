@@ -7,6 +7,7 @@ interface AnalysisRow {
   difficulty: number;
   difficulty_reason: string;
   learning_path: LearningStep[];
+  subfields: string[] | null;
 }
 
 // Batched lookup — call once per page render with every currently-listed
@@ -18,7 +19,7 @@ export async function getCompletedAnalyses(
 
   const sql = getSql();
   const rows = (await sql`
-    SELECT article_id, difficulty, difficulty_reason, learning_path
+    SELECT article_id, difficulty, difficulty_reason, learning_path, subfields
     FROM article_analysis
     WHERE article_id = ANY(${articleIds})
       AND status = 'complete'
@@ -32,6 +33,7 @@ export async function getCompletedAnalyses(
         difficulty: row.difficulty as ArticleAnalysis["difficulty"],
         difficultyReason: row.difficulty_reason,
         learningPath: row.learning_path,
+        subfields: row.subfields ?? [],
       },
     ])
   );
@@ -79,5 +81,21 @@ export async function completeArticle(
         prompt_version = ${PROMPT_VERSION},
         analyzed_at = now()
     WHERE article_id = ${articleId}
+  `;
+}
+
+// Writes subfield tags only — never touches difficulty, difficulty_reason,
+// learning_path, or prompt_version. Only applies to already-'complete' rows
+// (subfields are generated after difficulty analysis, never instead of it).
+export async function updateArticleSubfields(
+  articleId: string,
+  subfields: string[]
+): Promise<void> {
+  const sql = getSql();
+  await sql`
+    UPDATE article_analysis
+    SET subfields = ${subfields}
+    WHERE article_id = ${articleId}
+      AND status = 'complete'
   `;
 }

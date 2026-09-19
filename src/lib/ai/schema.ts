@@ -25,3 +25,14 @@ export const AiLearningPathOnlySchema = z.object({
 });
 
 export type AiLearningPathOnly = z.infer<typeof AiLearningPathOnlySchema>;
+
+// Used for generating an article's subfield tags — a small, independent
+// concern from difficulty/learningPath, see buildSubfieldsInput in
+// prompt.ts. Validated against the allowed taxonomy after parsing (see
+// generateSubfields.ts), since the allowed set varies per article and can't
+// be expressed as a static z.enum here.
+export const AiSubfieldsSchema = z.object({
+  subfields: z.array(z.string()).min(1).max(3),
+});
+
+export type AiSubfields = z.infer<typeof AiSubfieldsSchema>;

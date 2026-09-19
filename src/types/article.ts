@@ -17,6 +17,8 @@ export interface Article {
   category: CategorySlug;
   /** TEMPORARY: null means "not yet analyzed" — never replace with a guessed value. */
   difficulty: DifficultyLevel | null;
+  /** 1-3 fixed-taxonomy subtopic tags (src/lib/subfields.ts). Empty until backfilled. */
+  subfields: string[];
   source: string;
   publishedAt: string;
   /** External source URL (e.g. the ScienceDaily article). Absent for mock articles. */

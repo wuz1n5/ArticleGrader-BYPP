@@ -37,4 +37,7 @@ export interface ArticleAnalysis {
    * ordering.
    */
   learningPath: LearningStep[];
+  /** 1-3 fixed-taxonomy subtopic tags (src/lib/subfields.ts). Empty until
+   *  backfilled — independent of difficulty/learningPath/prompt_version. */
+  subfields: string[];
 }

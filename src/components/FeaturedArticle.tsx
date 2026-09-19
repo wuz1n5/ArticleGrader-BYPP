@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ArticleMeta from "@/components/ArticleMeta";
+import SubfieldTags from "@/components/SubfieldTags";
 import { getCategory } from "@/lib/categories";
 import type { Article } from "@/types/article";
 
@@ -23,7 +24,7 @@ export default function FeaturedArticle({ article }: FeaturedArticleProps) {
         <p className="max-w-2xl text-lg leading-relaxed text-zinc-600">
           {article.summary}
         </p>
-        <div className="mt-1 border-t border-zinc-200 pt-4">
+        <div className="mt-1 flex flex-col gap-2 border-t border-zinc-200 pt-4">
           <ArticleMeta
             category={article.category}
             difficulty={article.difficulty}
@@ -31,6 +32,7 @@ export default function FeaturedArticle({ article }: FeaturedArticleProps) {
             publishedAt={article.publishedAt}
             size="large"
           />
+          <SubfieldTags subfields={article.subfields} />
         </div>
       </div>
     </article>
